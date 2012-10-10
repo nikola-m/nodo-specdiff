@@ -1,0 +1,2 @@
+#!/bin/bash
+ gfortran -Wall precision.f95 space_discretization.f95 space_discretization_test.f95 -o test_module
