@@ -37,50 +37,60 @@
 
       end subroutine gl_nodes
       
-      function lagrange_basis_h(i,x,xs) result(h)
+      function lagrange_basis_h(i,n,x,xs) result(h)
 !     i-th Lagrange basis function for reconstruction of solution.
 !     We use it to construct a polynomial of order N-1,
 !     using the values at N solution points.
 !     Arguments:
 !     i  - which basis func. (integer)
+!     n  - number of solution points (integer)
 !     x - at what point we evaluete Lagrange basis func (real)
 !     xs - Chebyshev-Gauss nodes (1d array of reals, array size, N)
       implicit none
       real(dp) :: h
 !
       integer, intent(in) :: i 
+      integer, intent(in) :: n
       real(dp), intent(in) :: x
       real(dp),dimension(1:n),intent(in) :: xs
+!
+      integer :: j
+      real(dp) :: x_i  ! Nodal point associated with i-th Lagrange basis func.
 
       x_i = xs(i)
 
       h = 0.0_dp
-      do j=1,n
+      do j=1,n  ! Start from 1.
       if (j==i) cycle
         h = h * (x - xs(j))/(x_i-xs(j))
       end do
       
       end function lagrange_basis_h
 
-      function lagrange_basis_l(i,x,xs05) result(l05)
+      function lagrange_basis_l(i,n,x,xs05) result(l05)
 !     i-th Lagrange basis function for reconstruction of the flux.
 !     We use it to construct a polynomial of order N,
 !     using the values at N+1 flux points.
 !     Arguments:
 !     i  - which basis func. (integer)
+!     n  - number of solution points is n, number of flux points is n+1, here we pass no. of solution points, but the counter in a do loop starts with 0.
 !     x - at what point we evaluete Lagrange basis func (real)
 !     xs05 - Chebyshev-Gauss-Lobatto nodes (1d array of reals, array size, N+1)
       implicit none
       real(dp) :: l05
 !
       integer, intent(in) :: i 
+      integer, intent(in) :: n
       real(dp), intent(in) :: x
       real(dp),dimension(0:n),intent(in) :: xs05
+!
+      integer :: j
+      real(dp) :: x_i05
 
-      x_i05 = xs05(i)
+      x_i05 = xs05(i) ! Nodal point associated with i-th Lagrange basis func.
 
-      h = 0.0_dp
-      do j=0,n
+      l05 = 0.0_dp
+      do j=0,n   ! Start from 0.
       if (j==i) cycle
         l05 = l05 * (x - xs05(j))/(x_i05-xs05(j))
       end do
